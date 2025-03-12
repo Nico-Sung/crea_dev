@@ -1,6 +1,6 @@
 # The Mood Studio - Nicolas SUNG
 
-![The Mood Studio]
+[The Mood Studio]
 
 ## 📝 Description
 
