@@ -1,4 +1,4 @@
-# The Mood Studio - Nicolas SUNG
+# The Mood Studio - Nicolas SUNG / Ugo BENOIST
 
 [The Mood Studio]
 
