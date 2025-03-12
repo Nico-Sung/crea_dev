@@ -30,8 +30,8 @@ The Mood Studio est une expérience interactive immersive qui permet aux utilisa
 
 1. Clonez ce dépôt :
    ```bash
-   git clone https://github.com/votre-nom/mood-studio.git
-   cd mood-studio
+   git clone https://github.com/Nico-Sung/crea_dev.git
+   cd my-application
    ```markdown
 2. Installez les dépendances :
    ```bash
