@@ -44,7 +44,7 @@ export default function Home() {
                             className="text-center"
                         >
                             <motion.h1
-                                className="text-5xl font-bold text-white mb-2 font-poppins tracking-tight"
+                                className="text-5xl font-bold text-white mb-2 font-poppins"
                                 initial={{ y: 20, opacity: 0 }}
                                 animate={{ y: 0, opacity: 1 }}
                                 transition={{ delay: 0.6, duration: 0.8 }}
@@ -52,7 +52,7 @@ export default function Home() {
                                 The Mood Studio
                             </motion.h1>
                             <motion.p
-                                className="text-xl text-white/80 font-poppins font-light"
+                                className="text-xl text-white/80 font-poppins"
                                 initial={{ y: 20, opacity: 0 }}
                                 animate={{ y: 0, opacity: 1 }}
                                 transition={{ delay: 0.9, duration: 0.8 }}

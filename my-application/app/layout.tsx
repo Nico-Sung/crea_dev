@@ -2,7 +2,6 @@ import type React from "react";
 import "./globals.css";
 import type { Metadata } from "next";
 
-// Importer la police Poppins
 import { Poppins } from "next/font/google";
 
 const poppins = Poppins({

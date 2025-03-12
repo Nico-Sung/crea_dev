@@ -2,10 +2,12 @@
 
 import { useEffect, useRef, useState } from "react";
 import { motion, useScroll, useTransform } from "framer-motion";
+import SpecialSoundEffects from "./special-sound-effects";
 
 export default function EmotionSurprise() {
     const containerRef = useRef<HTMLDivElement>(null);
     const [mousePosition, setMousePosition] = useState({ x: 0, y: 0 });
+    const [playFunnySound, setPlayFunnySound] = useState(false);
     const { scrollYProgress } = useScroll({
         target: containerRef,
         offset: ["start end", "end start"],
@@ -26,6 +28,17 @@ export default function EmotionSurprise() {
         };
     }, []);
 
+    // reset le déclencheur du son après un délai
+    useEffect(() => {
+        if (playFunnySound) {
+            const timer = setTimeout(() => {
+                setPlayFunnySound(false);
+            }, 2000);
+
+            return () => clearTimeout(timer);
+        }
+    }, [playFunnySound]);
+
     // pop-up qui apparait et disparait
     const [popElements, setPopElements] = useState<
         { id: number; x: number; y: number; size: number; delay: number }[]
@@ -45,11 +58,22 @@ export default function EmotionSurprise() {
         setPopElements(elements);
     }, []);
 
+    const handleContainerClick = () => {
+        setPlayFunnySound(true);
+    };
+
     return (
         <div
             ref={containerRef}
-            className="relative h-full w-full bg-gradient-to-br from-purple-600 to-pink-500 overflow-hidden"
+            className="relative h-full w-full bg-gradient-to-br from-purple-600 to-pink-500 overflow-hidden cursor-pointer"
+            onClick={handleContainerClick}
         >
+            {/* effet sonore spécial pour le son funny */}
+            <SpecialSoundEffects
+                emotionType="surprise"
+                trigger={playFunnySound}
+            />
+
             {/* suivi du curseur */}
             <motion.div
                 className="absolute w-40 h-40 rounded-full bg-yellow-300 mix-blend-screen opacity-70 pointer-events-none"
@@ -116,6 +140,9 @@ export default function EmotionSurprise() {
                         rappelle que l'inattendu peut surgir à tout moment.
                         Explorez cet espace où l'imprévisible devient source
                         d'émerveillement.
+                    </p>
+                    <p className="mt-4 text-white/80 text-sm">
+                        Cliquez n'importe où pour une surprise sonore !
                     </p>
                 </motion.div>
             </div>

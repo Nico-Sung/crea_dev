@@ -2,11 +2,14 @@
 
 import { useEffect, useRef, useState } from "react";
 import { motion, useScroll, useTransform } from "framer-motion";
+import SpecialSoundEffects from "./special-sound-effects";
 
 export default function EmotionJoy() {
     const containerRef = useRef<HTMLDivElement>(null);
     const canvasRef = useRef<HTMLCanvasElement>(null);
     const [mousePosition, setMousePosition] = useState({ x: 0, y: 0 });
+    const [particlesGathered, setParticlesGathered] = useState(false);
+    const particlesGatheredTimerRef = useRef<NodeJS.Timeout | null>(null);
     const { scrollYProgress } = useScroll({
         target: containerRef,
         offset: ["start end", "end start"],
@@ -27,7 +30,7 @@ export default function EmotionJoy() {
         };
     }, []);
 
-    // cénvas animation pour joie - particules qui rebondissent
+    // canvas animation pour joie - particules qui rebondissent
     useEffect(() => {
         const canvas = canvasRef.current;
         if (!canvas) return;
@@ -69,6 +72,7 @@ export default function EmotionJoy() {
 
         let mouseX = 0;
         let mouseY = 0;
+        let particlesNearCursor = 0;
 
         const handleMouseMove = (e: MouseEvent) => {
             mouseX = e.clientX;
@@ -79,6 +83,7 @@ export default function EmotionJoy() {
 
         const animate = () => {
             ctx.clearRect(0, 0, canvas.width, canvas.height);
+            particlesNearCursor = 0;
 
             particles.forEach((particle) => {
                 // calcule la distance de la souris
@@ -105,6 +110,11 @@ export default function EmotionJoy() {
                     );
                     ctx.fillStyle = particle.color;
                     ctx.fill();
+
+                    // compte les particules très proches du curseur
+                    if (distance < 50) {
+                        particlesNearCursor++;
+                    }
                 } else {
                     // mouvement normal
                     ctx.beginPath();
@@ -137,6 +147,20 @@ export default function EmotionJoy() {
                 }
             });
 
+            // verifie si la plupart des particules sont près du curseur
+            if (particlesNearCursor >= 45 && !particlesGathered) {
+                setParticlesGathered(true);
+
+                // reset après un délai pour permettre de rejouer le son
+                if (particlesGatheredTimerRef.current) {
+                    clearTimeout(particlesGatheredTimerRef.current);
+                }
+
+                particlesGatheredTimerRef.current = setTimeout(() => {
+                    setParticlesGathered(false);
+                }, 5000);
+            }
+
             requestAnimationFrame(animate);
         };
 
@@ -152,6 +176,9 @@ export default function EmotionJoy() {
         return () => {
             window.removeEventListener("resize", handleResize);
             window.removeEventListener("mousemove", handleMouseMove);
+            if (particlesGatheredTimerRef.current) {
+                clearTimeout(particlesGatheredTimerRef.current);
+            }
         };
     }, []);
 
@@ -161,6 +188,12 @@ export default function EmotionJoy() {
             className="relative h-full w-full bg-gradient-to-b from-yellow-400 to-orange-500 overflow-hidden"
         >
             <canvas ref={canvasRef} className="absolute inset-0 z-0" />
+
+            {/* effet sonore spécial pour les applaudissements */}
+            <SpecialSoundEffects
+                emotionType="joy"
+                trigger={particlesGathered}
+            />
 
             {/* suivi du curseur */}
             <motion.div
@@ -205,6 +238,10 @@ export default function EmotionJoy() {
                         d'allégresse qui illumine notre être et nous connecte
                         aux autres. Laissez-vous porter par ces bulles d'énergie
                         positive qui dansent autour de vous.
+                    </p>
+                    <p className="mt-4 text-white/80 text-sm">
+                        Essayez d'attirer toutes les particules vers votre
+                        curseur pour déclencher les applaudissements !
                     </p>
                 </motion.div>
             </div>
